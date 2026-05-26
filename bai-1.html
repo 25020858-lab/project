@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bài 1 · Thao tác tệp tin và thư mục</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ===== Reset ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body, h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+    ul, ol { padding: 0; list-style: none; }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== Tokens ===== */
+    :root {
+      --bg:        #ffffff;
+      --surface:   #ffffff;
+      --text:      #1a1a1a;
+      --muted:     #6b7280;
+      --border:    #e5e7eb;
+      --accent:    #4a6b57;
+      --accent-2:  #3d5a48;
+      --tint:      #eaf0ec;
+      --radius:    14px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.06);
+      --ease:      cubic-bezier(0.2, 0.7, 0.2, 1);
+      --container: 1080px;
+      --gutter:    clamp(1rem, 4vw, 2.5rem);
+    }
+
+    /* ===== Base — Notion embed optimised ===== */
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: #ffffff;
+      margin: 0;
+      padding: 0.5rem 0;
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    h1, h2, h3, h4 { font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; color: var(--text); }
+    p { color: #2a2a2a; }
+
+    /* ===== Layout utilities ===== */
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .section-head {
+      max-width: 720px;
+      margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+    }
+    .section-head h2 {
+      font-size: clamp(1.65rem, 3.2vw, 2.25rem);
+      margin-bottom: 0.75rem;
+    }
+    .section-head p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 60ch;
+    }
+
+    /* ===== Bài 1 — Split layout ===== */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+      align-items: start;
+    }
+    @media (min-width: 720px) {
+      .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    }
+    .prose p + p { margin-top: 1rem; }
+    .prose ul {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .prose li {
+      padding-left: 1.5rem;
+      position: relative;
+      color: var(--muted);
+    }
+    .prose li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.7em;
+      width: 8px; height: 1px;
+      background: var(--accent);
+    }
+    .prose code {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      background: var(--tint);
+      color: var(--accent-2);
+      padding: 0.08em 0.4em;
+      border-radius: 4px;
+    }
+
+    /* ===== Image stack ===== */
+    .image-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .image-stack img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      cursor: zoom-in;
+      transition: transform 250ms var(--ease), box-shadow 250ms var(--ease);
+    }
+    .image-stack img:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+    /* ===== Lightbox ===== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 2rem;
+      cursor: zoom-out;
+      opacity: 0;
+      transition: opacity 200ms var(--ease);
+    }
+    .lightbox.open { display: flex; opacity: 1; }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 95vh;
+      width: auto;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      cursor: zoom-out;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 200ms var(--ease);
+    }
+    .lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
+
+    /* ===== Reveal ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+    }
+    .reveal.in-view { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <section class="reveal">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Bài 1</span>
+        <h2>Thao tác cơ bản với tệp tin và thư mục</h2>
+        <p>Tổ chức thư mục khoa học và quy ước đặt tên giúp bạn tìm lại tệp nhanh hơn, hợp tác dễ hơn.</p>
+      </div>
+
+      <div class="split">
+        <div class="prose">
+          <p>
+            Cấu trúc thư mục được tổ chức theo hướng phân cấp rõ ràng. Bắt đầu từ thư mục gốc mang tên sinh viên (ThucHanh_CaoLeVan), bên trong chứa các thư mục con phân loại theo mục đích (ví dụ: TaiLieu) giúp dễ dàng quản lý, sao chép và di chuyển tệp tin.
+          </p>
+          <p>
+            Quy tắc đặt tên tệp và thư mục được thiết lập để đảm bảo tính đồng nhất, dễ tìm kiếm và tránh lỗi đường dẫn trên các hệ điều hành:
+          </p>
+          <ul>
+            <li>Quy tắc 1: Tên thư mục không sử dụng tiếng Việt có dấu và khoảng trắng, thay vào đó dùng dấu gạch dưới để phân cách (Ví dụ: <code>ThucHanh_CaoLeVan</code>).</li>
+            <li>Quy tắc 2: Tên tệp tin sử dụng quy tắc CamelCase hoặc viết liền không dấu, phản ánh đúng nội dung tệp (Ví dụ: <code>GhiChuQuanTrong.txt</code>).</li>
+            <li>Quy tắc 3: Quản lý phiên bản và vị trí tệp rõ ràng, các tệp tài liệu được sắp xếp gọn gàng vào đúng thư mục con (<code>TaiLieu</code>).</li>
+          </ul>
+        </div>
+
+        <div class="image-stack">
+          <img src="1_1.png" alt="Đường dẫn thư mục 1" />
+          <img src="1_2.png" alt="Đường dẫn thư mục 2" />
+          <img src="1_3.png" alt="Đường dẫn thư mục 3" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('in-view'); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        els.forEach(function (el) { io.observe(el); });
+      }
+
+      /* ===== Lightbox: click ảnh trong section → fullscreen ===== */
+      var overlay = document.createElement('div');
+      overlay.className = 'lightbox';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-hidden', 'true');
+
+      var lbImg = document.createElement('img');
+      lbImg.alt = '';
+
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'lightbox-close';
+      closeBtn.setAttribute('aria-label', 'Đóng');
+      closeBtn.textContent = '×';
+
+      overlay.appendChild(lbImg);
+      overlay.appendChild(closeBtn);
+      document.body.appendChild(overlay);
+
+      var prevOverflow = '';
+      function openLB(src, alt) {
+        lbImg.src = src;
+        lbImg.alt = alt || '';
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeLB() {
+        if (!overlay.classList.contains('open')) return;
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        lbImg.src = '';
+        document.body.style.overflow = prevOverflow;
+      }
+
+      document.querySelectorAll('section img').forEach(function (el) {
+        el.addEventListener('click', function () {
+          openLB(el.currentSrc || el.src, el.alt);
+        });
+      });
+
+      overlay.addEventListener('click', closeLB);
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeLB();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLB();
+      });
+    })();
+  </script>
+</body>
+</html>
