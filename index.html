@@ -587,7 +587,53 @@
     .back-top:hover { gap: 0.6rem; }
 
     /* =============================================================
-       14. REVEAL ANIMATIONS (IntersectionObserver)
+       14. LIGHTBOX (click image → fullscreen, Esc to close)
+       ============================================================= */
+    section img { cursor: zoom-in; }
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 2rem;
+      cursor: zoom-out;
+      opacity: 0;
+      transition: opacity 200ms var(--ease);
+    }
+    .lightbox.open { display: flex; opacity: 1; }
+    .lightbox img {
+      max-width: 95vw;
+      max-height: 95vh;
+      width: auto;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      cursor: zoom-out;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 200ms var(--ease);
+    }
+    .lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
+
+    /* =============================================================
+       15. REVEAL ANIMATIONS (IntersectionObserver)
        ============================================================= */
     .reveal {
       opacity: 0;
@@ -654,12 +700,10 @@
     <div class="container">
       <span class="eyebrow">Digital Portfolio</span>
       <h1>
-        <!-- EDIT: thay bằng tên của bạn -->
-        [Tên của bạn]
+        Cao Lê Văn
       </h1>
       <p class="name">
-        <!-- EDIT: vai trò / lớp / mã sinh viên ngắn gọn -->
-        Sinh viên · Lớp · Mã số
+        Sinh viên · QH2025 · Mã số: 25020858
       </p>
 
       <div class="hero-grid">
@@ -673,15 +717,13 @@
         <div class="block">
           <h3>Mục tiêu học tập</h3>
           <p>
-            <!-- EDIT: mục tiêu học tập của bạn trong môn học này -->
-            Mô tả nội dung tại đây. Bạn muốn đạt được điều gì sau khi hoàn thành các bài học?
+            Nắm vững và ứng dụng hiệu quả các công cụ công nghệ số cùng Trí tuệ nhân tạo (AI) vào quá trình học tập, nghiên cứu. Rèn luyện tư duy hệ thống và kỹ năng giải quyết vấn đề thực tiễn.
           </p>
         </div>
         <div class="block">
           <h3>Mục tiêu portfolio</h3>
           <p>
-            <!-- EDIT: portfolio này để làm gì? -->
-            Mô tả nội dung tại đây. Portfolio này dùng để ghi lại tiến trình, sản phẩm và phản tư của bạn.
+            Hệ thống hóa toàn bộ kiến thức và kỹ năng đã tích lũy. Không gian này đóng vai trò như một kho lưu trữ trực quan các sản phẩm thực hành, minh chứng cho sự phát triển năng lực làm việc trong môi trường số.
           </p>
         </div>
       </div>
@@ -700,7 +742,7 @@
   <section id="bai-1" class="reveal">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Bài 1 · 1.4</span>
+        <span class="eyebrow">Bài 1</span>
         <h2>Thao tác cơ bản với tệp tin và thư mục</h2>
         <p>
           <!-- EDIT: mô tả ngắn cho bài 1 (1 dòng) -->
@@ -711,24 +753,22 @@
       <div class="split">
         <div class="prose">
           <p>
-            <!-- EDIT: trình bày cấu trúc thư mục tối ưu của bạn -->
-            Mô tả nội dung tại đây. Hãy giải thích cách bạn tổ chức thư mục cho học tập / dự án: phân chia theo môn học, theo học kỳ, hay theo loại tài liệu?
+            Cấu trúc thư mục được tổ chức theo hướng phân cấp rõ ràng. Bắt đầu từ thư mục gốc mang tên sinh viên (ThucHanh_CaoLeVan), bên trong chứa các thư mục con phân loại theo mục đích (ví dụ: TaiLieu) giúp dễ dàng quản lý, sao chép và di chuyển tệp tin.
           </p>
           <p>
-            <!-- EDIT: trình bày quy ước đặt tên tệp -->
-            Mô tả quy ước đặt tên tệp bạn đang áp dụng: dùng dấu gạch dưới hay gạch nối? Có thêm ngày tháng dạng YYYY-MM-DD không? Cách đánh số phiên bản ra sao?
+            Quy tắc đặt tên tệp và thư mục được thiết lập để đảm bảo tính đồng nhất, dễ tìm kiếm và tránh lỗi đường dẫn trên các hệ điều hành:
           </p>
           <ul>
-            <li>Quy tắc 1: <!-- EDIT --> ví dụ — không dùng dấu cách trong tên tệp.</li>
-            <li>Quy tắc 2: <!-- EDIT --> ví dụ — dùng tiền tố ngày tháng để dễ sắp xếp.</li>
-            <li>Quy tắc 3: <!-- EDIT --> ví dụ — đánh số phiên bản dạng v1, v2…</li>
-            <li>Quy tắc 4: <!-- EDIT --> ví dụ — tách rõ thư mục bản gốc và bản chỉnh sửa.</li>
+            <li>Quy tắc 1: Tên thư mục không sử dụng tiếng Việt có dấu và khoảng trắng, thay vào đó dùng dấu gạch dưới để phân cách (Ví dụ: <code>ThucHanh_CaoLeVan</code>).</li>
+            <li>Quy tắc 2: Tên tệp tin sử dụng quy tắc CamelCase hoặc viết liền không dấu, phản ánh đúng nội dung tệp (Ví dụ: <code>GhiChuQuanTrong.txt</code>, <code>DiChuyen.txt</code>).</li>
+            <li>Quy tắc 3: Quản lý phiên bản và vị trí tệp rõ ràng, các tệp tài liệu được sắp xếp gọn gàng vào đúng thư mục con (<code>TaiLieu</code>).</li>
           </ul>
         </div>
 
-        <!-- IMAGE: thay bằng <img src="..." alt="Ảnh chụp cấu trúc thư mục"> -->
-        <div class="image-placeholder">
-          <span class="label">Ảnh chụp cấu trúc thư mục</span>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <img src="1_1.png" alt="Đường dẫn thư mục 1" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <img src="1_2.png" alt="Đường dẫn thư mục 2" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <img src="1_3.png" alt="Đường dẫn thư mục 3" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
         </div>
       </div>
     </div>
@@ -741,7 +781,7 @@
   <section id="bai-2" class="reveal">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Bài 2 · 2.4</span>
+        <span class="eyebrow">Bài 2</span>
         <h2>Tìm kiếm và đánh giá thông tin học thuật</h2>
         <p>
           <!-- EDIT: mô tả ngắn cho bài 2 -->
@@ -751,14 +791,13 @@
 
       <div class="prose">
         <p>
-          <!-- EDIT: giới thiệu các toán tử tìm kiếm nâng cao bạn đã học -->
-          Mô tả nội dung tại đây. Các toán tử nâng cao như <code>"..."</code>, <code>site:</code>, <code>filetype:</code>, <code>intitle:</code>, hoặc <code>-</code> (loại trừ) giúp thu hẹp kết quả và tăng độ chính xác.
+          Để thu thập tài liệu chất lượng về phương pháp giải số cho phương trình Navier-Stokes, tôi đã áp dụng chiến lược tìm kiếm chéo trên các cơ sở dữ liệu học thuật như Google Scholar, ScienceDirect, và IEEE Xplore. Việc kết hợp các từ khóa chuyên sâu cùng các toán tử tìm kiếm nâng cao đã giúp thu hẹp phạm vi và định vị chính xác nguồn học thuật:
         </p>
         <ul>
-          <li><code>"từ khóa chính xác"</code> — <!-- EDIT --> tìm cụm từ nguyên văn.</li>
-          <li><code>site:edu.vn</code> — <!-- EDIT --> giới hạn ở các tên miền giáo dục.</li>
-          <li><code>filetype:pdf</code> — <!-- EDIT --> chỉ trả về tệp PDF.</li>
-          <li><code>-quảng cáo</code> — <!-- EDIT --> loại bỏ từ không mong muốn.</li>
+          <li><code>"Navier-Stokes equations numerical solutions"</code> — Tìm chính xác cụm từ để tiếp cận thẳng các bài báo về giải pháp số.</li>
+          <li><code>"Computational Fluid Dynamics (CFD)"</code> — Toán tử ngoặc kép giúp lọc các tài liệu chuẩn xác về lĩnh vực Động lực học chất lưu số.</li>
+          <li><code>site:edu</code> hoặc <code>site:org</code> — Giới hạn phạm vi tìm kiếm trong các tên miền của tổ chức giáo dục và viện toán học uy tín.</li>
+          <li><code>"NASA Technical Reports Server"</code> — Mở rộng tìm kiếm các báo cáo kỹ thuật có tính ứng dụng thực tiễn cao trong ngành hàng không vũ trụ.</li>
         </ul>
       </div>
 
@@ -774,30 +813,29 @@
             </tr>
           </thead>
           <tbody>
-            <!-- EDIT: thay 4 hàng dưới bằng các nguồn bạn đã đánh giá -->
             <tr>
-              <td>[Tên nguồn / URL]</td>
-              <td>[Tác giả / tổ chức]</td>
+              <td>An Introduction to Fluid Dynamics. (Batchelor, G.K., 2000)</td>
+              <td>G.K. Batchelor / NXB Cambridge University Press</td>
               <td><span class="pill high">Cao</span></td>
-              <td>Nguồn học thuật, có trích dẫn rõ ràng, được xuất bản gần đây.</td>
+              <td>Hệ thống lý thuyết nền tảng hoàn hảo, lượt trích dẫn khổng lồ (&gt;30,000). Tính cập nhật thấp nhưng là lý thuyết gốc.</td>
             </tr>
             <tr>
-              <td>[Tên nguồn / URL]</td>
-              <td>[Tác giả / tổ chức]</td>
+              <td>Deep learning for universal linear embeddings of nonlinear dynamics. (Lusch et al., 2018)</td>
+              <td>Nhóm nghiên cứu ĐH Washington / NXB Nature</td>
+              <td><span class="pill high">Cao</span></td>
+              <td>Tạp chí top đầu. Tính cập nhật rất tốt (Deep Learning giải hệ phi tuyến), trích dẫn cao.</td>
+            </tr>
+            <tr>
+              <td>Navier-Stokes Equation. (Clay Mathematics Institute, 2023)</td>
+              <td>Viện Toán học Clay (Mỹ)</td>
               <td><span class="pill medium">Trung bình</span></td>
-              <td>Nội dung tham khảo tốt nhưng thiếu nguồn gốc dữ liệu.</td>
+              <td>Cung cấp định nghĩa chuẩn mực nhưng mang tính giới thiệu, không có quá trình phản biện kín (peer-review) như bài báo học thuật.</td>
             </tr>
             <tr>
-              <td>[Tên nguồn / URL]</td>
-              <td>[Tác giả / tổ chức]</td>
-              <td><span class="pill high">Cao</span></td>
-              <td>Trang chính thức của cơ quan / tổ chức uy tín.</td>
-            </tr>
-            <tr>
-              <td>[Tên nguồn / URL]</td>
-              <td>[Tác giả / tổ chức]</td>
+              <td>OpenFOAM User Guide: Incompressible Navier-Stokes Solvers.</td>
+              <td>Tổ chức OpenCFD Ltd.</td>
               <td><span class="pill low">Thấp</span></td>
-              <td>Blog cá nhân, không nêu nguồn, có dấu hiệu thiên kiến.</td>
+              <td>Tài liệu hướng dẫn phần mềm mã nguồn mở. Có tính thực hành tốt nhưng không dùng để tham khảo chứng minh toán học.</td>
             </tr>
           </tbody>
         </table>
@@ -812,7 +850,7 @@
   <section id="bai-3" class="reveal">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Bài 3 · 3.4</span>
+        <span class="eyebrow">Bài 3</span>
         <h2>Viết Prompt hiệu quả</h2>
         <p>
           <!-- EDIT: mô tả ngắn cho bài 3 -->
@@ -824,31 +862,24 @@
         <!-- LEFT: Prompt ban đầu -->
         <div class="prompt-card">
           <span class="tag">Prompt ban đầu</span>
-          <h3>Cách viết chưa tối ưu</h3>
-<pre>
-<!-- EDIT: dán prompt gốc của bạn vào đây -->
-Viết giúp tôi một đoạn về AI.
-</pre>
+          <h3>Mức độ cơ bản</h3>
+<pre>Giải thích nguyên lý bất định Heisenberg là gì.</pre>
           <p>
-            <!-- EDIT: nhận xét vì sao prompt này chưa tốt -->
-            Mô tả nội dung tại đây. Prompt này còn mơ hồ, không nêu rõ đối tượng đọc, độ dài, hay giọng văn mong muốn.
+            Đánh giá: AI copy y hệt giọng văn của Wikipedia, sử dụng quá nhiều từ ngữ chuyên ngành (động lượng, hàm sóng) khiến người đọc bị rối.
           </p>
         </div>
 
         <!-- RIGHT: Prompt cải tiến -->
         <div class="prompt-card improved">
           <span class="tag">Prompt cải tiến</span>
-          <h3>Sau khi áp dụng kỹ thuật</h3>
-<pre>
-<!-- EDIT: dán prompt đã cải tiến của bạn vào đây -->
-Đóng vai một giảng viên thân thiện, viết đoạn 150 từ
-giới thiệu AI tạo sinh cho sinh viên năm nhất.
-Yêu cầu: dùng ví dụ thực tế, tránh thuật ngữ kỹ thuật,
-kết thúc bằng một câu hỏi mở.
-</pre>
+          <h3>Áp dụng kỹ thuật Chain-of-Thought</h3>
+<pre>Sử dụng kỹ thuật Chain-of-Thought (Tư duy từng bước). Hãy giải thích Nguyên lý bất định Heisenberg theo các bước sau:
+
+- Bước 1: Giải thích khái niệm bằng ngôn ngữ đời thường cho học sinh cấp 3.
+- Bước 2: Đưa ra một ví dụ so sánh sự khác biệt giữa việc chụp ảnh một chiếc ô tô đang chạy và việc đo vị trí một electron.
+- Bước 3: Nêu công thức ΔxΔp ≥ h/4π và giải thích.</pre>
           <p>
-            <!-- EDIT: nhận xét vì sao prompt cải tiến tốt hơn -->
-            Mô tả nội dung tại đây. Prompt mới chỉ rõ vai trò, đối tượng, độ dài, ràng buộc về phong cách và kết cấu — nhờ đó AI tạo ra kết quả sát mục tiêu hơn.
+            Đánh giá (Tối ưu nhất): Cấu trúc từng bước ép AI phải suy luận logic. Ví dụ về "chiếc ô tô" cực kỳ đắt giá, giúp người học nhận ra bản chất sự bất định ở cấp độ vi mô khác vĩ mô như thế nào.
           </p>
         </div>
       </div>
@@ -857,10 +888,13 @@ kết thúc bằng một câu hỏi mở.
       <div class="ai-output">
         <span class="tag">Kết quả từ AI</span>
         <h3>Output sau khi dùng prompt cải tiến</h3>
-        <p>
-          <!-- EDIT: dán kết quả AI trả về tại đây -->
-          Mô tả nội dung tại đây. Dán nguyên văn câu trả lời mà mô hình tạo ra để minh hoạ sự khác biệt giữa hai prompt.
-        </p>
+        <div style="font-size: 0.95rem; color: #2a2a2a;">
+          <p><strong>Bước 1:</strong> Khái niệm cốt lõi: Bạn không thể đồng thời biết chính xác cả vị trí và tốc độ của một hạt (như electron). Nếu bạn đo vị trí càng chính xác, bạn càng làm thay đổi tốc độ của nó, và ngược lại.</p>
+          <br>
+          <p><strong>Bước 2:</strong> Hãy tưởng tượng bạn chụp ảnh một chiếc ô tô đang chạy trên cao tốc. Nếu bạn dùng tốc độ màn trập nhanh, bạn có được bức ảnh ô tô sắc nét (biết rõ vị trí), nhưng chiếc xe trông như đang đứng yên (không biết tốc độ). Ở thế giới vi mô, điều này còn khắc nghiệt hơn: bản thân việc "nhìn" vào electron bằng ánh sáng đã truyền cho nó một năng lượng làm thay đổi quỹ đạo của nó.</p>
+          <br>
+          <p><strong>Bước 3:</strong> Công thức: <code>Δx.Δp ≥ h/4π</code>. Trong đó <code>Δx</code> là sai số vị trí, <code>Δp</code> là sai số động lượng (liên quan đến tốc độ), và <code>h</code> là hằng số Planck. Tích của hai sai số này luôn lớn hơn một hằng số, nghĩa là chúng không thể cùng bằng 0 (không thể chính xác tuyệt đối cùng lúc).</p>
+        </div>
       </div>
     </div>
   </section>
@@ -872,40 +906,29 @@ kết thúc bằng một câu hỏi mở.
   <section id="bai-4" class="reveal">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Bài 4 · 4.4</span>
+        <span class="eyebrow">Bài 4</span>
         <h2>Công cụ hợp tác trực tuyến</h2>
         <p>
-          <!-- EDIT: mô tả ngắn cho bài 4 -->
-          Bằng chứng sử dụng công cụ quản lý nhóm và phối hợp trực tuyến trong quá trình làm bài.
+          Minh chứng cho việc sử dụng đồng bộ 4 công cụ (Trello, Google Drive, Google Docs, Messenger) để quản lý tiến độ, lưu trữ và phối hợp trực tuyến trong dự án "Tìm hiểu ứng dụng ChatGPT trong học tập".
         </p>
       </div>
 
       <div class="gallery stagger">
-        <!-- Lặp lại block dưới đây cho mỗi ảnh; thay <div class="image-placeholder"> bằng <img> khi có ảnh thật -->
         <div class="item">
-          <!-- IMAGE: thay bằng <img src="..." alt="..."> -->
-          <div class="image-placeholder"><span class="label">Ảnh minh hoạ 1</span></div>
-          <p class="caption"><!-- EDIT: chú thích ảnh -->Thêm chú thích cho ảnh…</p>
+          <img src="4_1.png" alt="Trello" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <p class="caption">Tự quản lý danh sách nhiệm vụ trên nền tảng Trello (Sử dụng Checklist và thiết lập Deadline).</p>
         </div>
         <div class="item">
-          <div class="image-placeholder"><span class="label">Ảnh minh hoạ 2</span></div>
-          <p class="caption">Thêm chú thích cho ảnh…</p>
+          <img src="4_2.png" alt="Google Drive" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <p class="caption">Tổ chức và lưu trữ tệp tin cá nhân khoa học trên thư mục dùng chung của Google Drive.</p>
         </div>
         <div class="item">
-          <div class="image-placeholder"><span class="label">Ảnh minh hoạ 3</span></div>
-          <p class="caption">Thêm chú thích cho ảnh…</p>
+          <img src="4_3.png" alt="Google Docs" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <p class="caption">Lịch sử chỉnh sửa và đóng góp nội dung (Sử dụng tính năng Comment và Suggesting) trên Google Docs.</p>
         </div>
         <div class="item">
-          <div class="image-placeholder"><span class="label">Ảnh minh hoạ 4</span></div>
-          <p class="caption">Thêm chú thích cho ảnh…</p>
-        </div>
-        <div class="item">
-          <div class="image-placeholder"><span class="label">Ảnh minh hoạ 5</span></div>
-          <p class="caption">Thêm chú thích cho ảnh…</p>
-        </div>
-        <div class="item">
-          <div class="image-placeholder"><span class="label">Ảnh minh hoạ 6</span></div>
-          <p class="caption">Thêm chú thích cho ảnh…</p>
+          <img src="4_4.png" alt="Messenger" style="width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+          <p class="caption">Tương tác, thảo luận chủ động và giải quyết vướng mắc kịp thời trên công cụ giao tiếp Messenger.</p>
         </div>
       </div>
     </div>
@@ -921,19 +944,20 @@ kết thúc bằng một câu hỏi mở.
         <span class="eyebrow">Bài 5 · 5.4</span>
         <h2>AI tạo sinh hỗ trợ sáng tạo</h2>
         <p>
-          <!-- EDIT: mô tả ngắn cho bài 5 -->
-          Sản phẩm nội dung số cuối cùng được tạo ra với sự hỗ trợ của các công cụ AI tạo sinh.
+          Trưng bày sản phẩm video hoàn thiện được tạo ra với sự phối hợp của các công cụ Trí tuệ nhân tạo tạo sinh từ khâu kịch bản đến hình ảnh.
         </p>
       </div>
 
       <div class="showcase">
-        <!-- IMAGE / VIDEO: thay khung dưới bằng <video src="..."> hoặc <iframe ...> -->
-        <div class="showcase-frame" role="img" aria-label="Sản phẩm số cuối cùng">
-          <div class="play"><div class="play-icon" aria-hidden="true"></div></div>
-        </div>
+        <video
+          controls
+          preload="metadata"
+          style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius); box-shadow: var(--shadow-lg); background: #000;">
+          <source src="Bài tập nhóm 35 - Ứng dụng của AI trong Khoa học kĩ thuật - Công nghệ.mp4" type="video/mp4">
+          Trình duyệt của bạn không hỗ trợ thẻ video.
+        </video>
         <p class="showcase-caption">
-          <!-- EDIT: chú thích cho sản phẩm cuối cùng -->
-          Tên sản phẩm · Công cụ đã dùng · Nguồn cảm hứng. Bấm để xem chi tiết.
+          Sản phẩm Video số · Công cụ sử dụng: Gemini (lên kịch bản) &amp; Lumen5 (chuyển kịch bản thành slide và tạo video).
         </p>
       </div>
     </div>
@@ -949,55 +973,40 @@ kết thúc bằng một câu hỏi mở.
         <span class="eyebrow">Bài 6 · 6.4</span>
         <h2>AI có trách nhiệm</h2>
         <p>
-          <!-- EDIT: mô tả ngắn cho bài 6 -->
-          Những nguyên tắc cá nhân khi sử dụng AI một cách có trách nhiệm trong học tập và sáng tạo.
+          Để đảm bảo sự phát triển năng lực tự thân và duy trì liêm chính học thuật, tôi tự thiết lập cho mình 6 nguyên tắc cốt lõi khi sử dụng AI:
         </p>
       </div>
 
       <div class="principles stagger">
-        <!-- Lặp lại block dưới đây cho mỗi nguyên tắc -->
         <article class="principle">
           <span class="num">01</span>
-          <h3><!-- EDIT -->Minh bạch về việc dùng AI</h3>
-          <p>
-            <!-- EDIT: mô tả nguyên tắc 1 -->
-            Mô tả nội dung tại đây. Luôn ghi rõ phần nào của bài làm có sự hỗ trợ của AI và công cụ cụ thể nào đã được dùng.
-          </p>
+          <h3>Kiểm chứng (Fact-check)</h3>
+          <p>Luôn coi thông tin AI cung cấp chỉ là giả thuyết. Bắt buộc phải đối chiếu lại với các nguồn tài liệu chính thống (sách giáo trình, bài báo khoa học được bình duyệt) trước khi đưa vào bài làm.</p>
         </article>
         <article class="principle">
           <span class="num">02</span>
-          <h3><!-- EDIT -->Kiểm chứng thông tin</h3>
-          <p>
-            Mô tả nội dung tại đây. AI có thể tạo ra thông tin sai; mọi dữ kiện cần được đối chiếu với nguồn đáng tin cậy.
-          </p>
+          <h3>Minh bạch</h3>
+          <p>Luôn chủ động khai báo sự hỗ trợ của AI dưới mọi hình thức (lên ý tưởng, dịch thuật hay sửa mã code).</p>
         </article>
         <article class="principle">
           <span class="num">03</span>
-          <h3><!-- EDIT -->Tôn trọng bản quyền</h3>
-          <p>
-            Mô tả nội dung tại đây. Không sử dụng AI để sao chép hoặc đạo nhái tác phẩm của người khác.
-          </p>
+          <h3>Làm chủ tư duy</h3>
+          <p>Bản đề cương chi tiết và lập luận cốt lõi phải do bản thân tự xây dựng trước khi nhờ AI góp ý mở rộng. AI không được phép thay thế bộ não của tôi.</p>
         </article>
         <article class="principle">
           <span class="num">04</span>
-          <h3><!-- EDIT -->Bảo vệ dữ liệu cá nhân</h3>
-          <p>
-            Mô tả nội dung tại đây. Không nhập thông tin riêng tư, nhạy cảm vào các công cụ AI công khai.
-          </p>
+          <h3>Bảo mật</h3>
+          <p>Tuyệt đối không tải các dữ liệu cá nhân bí mật, các công trình nghiên cứu chưa công bố của thầy cô hoặc bản thân lên các chatbot AI công cộng để tránh rò rỉ dữ liệu.</p>
         </article>
         <article class="principle">
           <span class="num">05</span>
-          <h3><!-- EDIT -->Suy nghĩ phản biện</h3>
-          <p>
-            Mô tả nội dung tại đây. Coi đầu ra của AI là điểm khởi đầu để suy nghĩ, không phải kết luận.
-          </p>
+          <h3>Phát triển kỹ năng</h3>
+          <p>Không dùng AI để làm thay các bài tập có mục đích rèn luyện kỹ năng nền tảng (như kỹ năng đọc hiểu, kỹ năng tóm tắt văn bản hoặc kỹ năng viết luận cơ bản).</p>
         </article>
         <article class="principle">
           <span class="num">06</span>
-          <h3><!-- EDIT -->Học để hiểu, không để né</h3>
-          <p>
-            Mô tả nội dung tại đây. Dùng AI để mở rộng năng lực, không để thay thế quá trình học của chính mình.
-          </p>
+          <h3>Đóng góp giá trị</h3>
+          <p>Đầu ra cuối cùng của bài làm phải luôn chứa đựng nhận thức, góc nhìn phân tích hoặc trải nghiệm thực tế mang tính cá nhân của tôi mà AI không thể có được.</p>
         </article>
       </div>
     </div>
@@ -1016,12 +1025,10 @@ kết thúc bằng một câu hỏi mở.
 
       <div class="reflection">
         <p>
-          <!-- EDIT: phản tư về quá trình làm portfolio -->
-          Mô tả nội dung tại đây. Hãy chia sẻ cảm nhận của bạn trong suốt quá trình thực hiện: bạn đã học được gì mới, gặp khó khăn gì, và đã vượt qua ra sao?
+          Quá trình xây dựng Digital Portfolio này là một trải nghiệm đáng giá giúp tôi hệ thống hóa lại kiến thức. Khó khăn lớn nhất ban đầu là việc chuyển đổi từ tư duy lập trình logic đơn thuần sang tư duy thiết kế hệ thống (system design) để tổ chức thông tin trực quan, khoa học. Bằng cách áp dụng phương pháp chia nhỏ vấn đề và khai thác hiệu quả các công cụ trực tuyến cùng AI tạo sinh, tôi đã từng bước vượt qua và hoàn thiện sản phẩm một cách tối ưu nhất.
         </p>
         <p>
-          <!-- EDIT: bài học rút ra & hướng phát triển -->
-          Mô tả nội dung tại đây. Bài học lớn nhất bạn mang theo sau khi hoàn thành portfolio này là gì, và bạn sẽ áp dụng chúng vào những việc tiếp theo ra sao?
+          Bài học lớn nhất tôi mang theo là tầm quan trọng của việc làm chủ công cụ số và nguyên tắc sử dụng AI có trách nhiệm. Đối với định hướng tiến sâu vào các lĩnh vực kỹ thuật phức tạp và tham gia các phòng thí nghiệm nghiên cứu trong tương lai, những kỹ năng như tổ chức dữ liệu, viết prompt chuẩn xác và hợp tác nhóm từ xa được rèn luyện từ dự án này sẽ là một nền tảng vững chắc và không thể thiếu.
         </p>
       </div>
     </div>
@@ -1056,15 +1063,15 @@ kết thúc bằng một câu hỏi mở.
           <h4>Liên hệ</h4>
           <ul>
             <!-- EDIT: thay bằng địa chỉ liên hệ thật -->
-            <li><a href="mailto:email@example.com">email@example.com</a></li>
-            <li><a href="#" rel="noopener">GitHub</a></li>
-            <li><a href="#" rel="noopener">LinkedIn</a></li>
+            <li><a href="mailto:25020858@vnu.edu.vn">25020858@vnu.edu.vn</a></li>
+            <li><a href="https://github.com" rel="noopener">GitHub</a></li>
+            <li><a href="https://linkedin.com" rel="noopener">LinkedIn</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <span>© <span id="year">2026</span> · <!-- EDIT -->[Tên của bạn]</span>
+        <span>© <span id="year">2026</span> · Cao Lê Văn</span>
         <a href="#top" class="back-top">Lên đầu trang ↑</a>
       </div>
     </div>
@@ -1100,9 +1107,67 @@ kết thúc bằng một câu hỏi mở.
       if (y) y.textContent = new Date().getFullYear();
     }
 
+    /* =============================================================
+       Lightbox: click ảnh trong <section> → mở fullscreen
+       - Đóng bằng phím Esc, click nền, click ảnh, hoặc nút ×.
+       ============================================================= */
+    function initLightbox() {
+      var overlay = document.createElement('div');
+      overlay.className = 'lightbox';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-hidden', 'true');
+
+      var img = document.createElement('img');
+      img.alt = '';
+
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'lightbox-close';
+      closeBtn.setAttribute('aria-label', 'Đóng');
+      closeBtn.textContent = '×';
+
+      overlay.appendChild(img);
+      overlay.appendChild(closeBtn);
+      document.body.appendChild(overlay);
+
+      var prevOverflow = '';
+
+      function open(src, alt) {
+        img.src = src;
+        img.alt = alt || '';
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        if (!overlay.classList.contains('open')) return;
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden', 'true');
+        img.src = '';
+        document.body.style.overflow = prevOverflow;
+      }
+
+      document.querySelectorAll('section img').forEach(function (el) {
+        el.addEventListener('click', function () {
+          open(el.currentSrc || el.src, el.alt);
+        });
+      });
+
+      overlay.addEventListener('click', close);
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        close();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       initReveal();
       setYear();
+      initLightbox();
     });
   </script>
 </body>
